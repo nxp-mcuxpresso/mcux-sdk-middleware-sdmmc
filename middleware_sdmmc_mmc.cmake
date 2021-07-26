@@ -6,7 +6,7 @@ target_sources(${MCUX_SDK_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/mmc/fsl_mmc.c
 )
 
-target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
+target_include_directories(${MCUX_SDK_PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/mmc
 )
 
@@ -33,6 +33,9 @@ if(${MCUX_DEVICE} STREQUAL "LPC54S018M")
     include(middleware_sdmmc_host_sdif)
 endif()
 if(${MCUX_DEVICE} STREQUAL "MIMXRT1024")
+    include(middleware_sdmmc_host_usdhc)
+endif()
+if(${MCUX_DEVICE} STREQUAL "MIMXRT595S_cm33")
     include(middleware_sdmmc_host_usdhc)
 endif()
 

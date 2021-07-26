@@ -2,7 +2,14 @@
 @page middleware_log Middleware Change Log
 
 @section host_sdif Host SDIF driver for MCUXpresso SDK
-The current driver version is 2.3.1.
+The current driver version is 2.4.0.
+  - 2.4.0
+    - Improvements
+      - Removed deprecated api in SDIF host driver.
+      - Added SDMMCHOST_ConvertDataToLittleEndian api.
+      - Added capability/maxBlockCount/maxBlockSize in host decriptior.
+      - Added mutual exclusive access for function init/deinit/reset/transfer function.
+      - Fixed violations of MISRA C-2012 rule 10.1.
 
   - 2.3.1
     - Improvements

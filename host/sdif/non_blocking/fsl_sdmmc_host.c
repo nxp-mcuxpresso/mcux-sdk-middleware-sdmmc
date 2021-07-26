@@ -152,9 +152,9 @@ uint32_t SDMMCHOST_CardDetectStatus(sdmmchost_t *host)
 
 #if defined(FSL_FEATURE_SDIF_ONE_INSTANCE_SUPPORT_TWO_CARD) && FSL_FEATURE_SDIF_ONE_INSTANCE_SUPPORT_TWO_CARD
     if (((host->hostPort == 0U) &&
-         SDIF_DetectCardInsert(base, sdCD->type == kSD_DetectCardByHostDATA3 ? true : false)) ||
+         (SDIF_DetectCardInsert(base, sdCD->type == kSD_DetectCardByHostDATA3 ? true : false) == 1U)) ||
         ((host->hostPort == 1U) &&
-         SDIF_DetectCard1Insert(base, sdCD->type == kSD_DetectCardByHostDATA3 ? true : false)))
+         (SDIF_DetectCard1Insert(base, sdCD->type == kSD_DetectCardByHostDATA3 ? true : false) == 1U)))
 #else
     if ((host->hostPort == 0U) &&
         (SDIF_DetectCardInsert(base, sdCD->type == kSD_DetectCardByHostDATA3 ? true : false) == 1U))
@@ -214,19 +214,6 @@ status_t SDMMCHOST_PollingCardDetectStatus(sdmmchost_t *host, uint32_t waitCardS
     return kStatus_Success;
 }
 
-status_t SDMMCHOST_WaitCardDetectStatus(SDMMCHOST_TYPE *hostBase,
-                                        const sdmmchost_detect_card_t *cd,
-                                        bool waitCardStatus)
-{
-    assert(cd != NULL);
-
-    while (SDIF_DetectCardInsert(hostBase, false) != (uint32_t)waitCardStatus)
-    {
-    }
-
-    return kStatus_Success;
-}
-
 static void SDMMCHOST_TransferCompleteCallback(SDIF_Type *base, void *handle, status_t status, void *userData)
 {
     uint32_t eventStatus = 0U;
@@ -256,6 +243,8 @@ status_t SDMMCHOST_TransferFunction(sdmmchost_t *host, sdmmchost_transfer_t *con
     status_t error = kStatus_Success;
     uint32_t event = 0U;
     sdif_dma_config_t dmaConfig;
+
+    SDMMC_OSAMutexLock(&host->lock, osaWaitForever_c);
 
     /* clear redundant transfer event flag */
     (void)SDMMC_OSAEventClear(&(host->hostEvent),
@@ -314,12 +303,14 @@ status_t SDMMCHOST_TransferFunction(sdmmchost_t *host, sdmmchost_transfer_t *con
      * error = kStatus_SDIF_DescriptorBufferLenError means that the DMA descriptor buffer not len enough for current
      * transfer, application should assign a bigger descriptor memory space.
      */
-    else
+    if (error != kStatus_Success)
     {
         error = kStatus_Fail;
         /* host error recovery */
         SDMMCHOST_ErrorRecovery(host->hostController.base);
     }
+
+    SDMMC_OSAMutexUnlock(&host->lock);
 
     return error;
 }
@@ -358,42 +349,17 @@ void SDMMCHOST_SetCardPower(sdmmchost_t *host, bool enable)
     }
 }
 
-void SDMMCHOST_PowerOffCard(SDMMCHOST_TYPE *base, const sdmmchost_pwr_card_t *pwr)
+void SDMMCHOST_ConvertDataToLittleEndian(sdmmchost_t *host, uint32_t *data, uint32_t wordSize, uint32_t format)
 {
-    if (pwr != NULL)
-    {
-        pwr->powerOff();
-        SDMMC_OSADelay(pwr->powerOffDelay_ms);
-    }
-    else
-    {
-        /* disable the card power */
-        SDIF_EnableCardPower(base, false);
-        /* Delay several milliseconds to make card stable. */
-        SDMMC_OSADelay(500U);
-    }
-}
+    uint32_t temp = 0U;
 
-void SDMMCHOST_PowerOnCard(SDMMCHOST_TYPE *base, const sdmmchost_pwr_card_t *pwr)
-{
-    /* use user define the power on function  */
-    if (pwr != NULL)
+    if (format == kSDMMC_DataPacketFormatMSBFirst)
     {
-        pwr->powerOn();
-        SDMMC_OSADelay(pwr->powerOnDelay_ms);
-    }
-    else
-    {
-        /* Enable the card power */
-        SDIF_EnableCardPower(base, true);
-        /* Delay several milliseconds to make card stable. */
-        SDMMC_OSADelay(500U);
-    }
-
-    /* perform SDIF host controller reset only when DATA BUSY is assert */
-    if ((SDIF_GetControllerStatus(base) & SDIF_STATUS_DATA_BUSY_MASK) != 0U)
-    {
-        (void)SDIF_Reset(base, kSDIF_ResetAll, SDMMCHOST_RESET_TIMEOUT_VALUE);
+        for (uint32_t i = 0U; i < wordSize; i++)
+        {
+            temp    = data[i];
+            data[i] = SWAP_WORD_BYTE_SEQUENCE(temp);
+        }
     }
 }
 
@@ -403,12 +369,23 @@ status_t SDMMCHOST_Init(sdmmchost_t *host)
 
     sdif_transfer_callback_t sdifCallback = {0};
     sdif_host_t *sdifHost                 = &(host->hostController);
+    status_t error                        = kStatus_Success;
+
+    /* host capability flags */
+    host->capability = (uint32_t)kSDMMCHOST_SupportHighSpeed | (uint32_t)kSDMMCHOST_SupportSuspendResume |
+                       (uint32_t)kSDMMCHOST_SupportVoltage3v3 | (uint32_t)kSDMMCHOST_Support4BitDataWidth |
+                       (uint32_t)kSDMMCHOST_Support8BitDataWidth | (uint32_t)kSDMMCHOST_SupportDetectCardByData3 |
+                       (uint32_t)kSDMMCHOST_SupportDetectCardByCD | (uint32_t)kSDMMCHOST_SupportAutoCmd12;
+    host->maxBlockCount = SDMMCHOST_SUPPORT_MAX_BLOCK_COUNT;
+    host->maxBlockSize  = SDMMCHOST_SUPPORT_MAX_BLOCK_LENGTH;
 
     /* sdmmc osa init */
     SDMMC_OSAInit();
 
+    SDMMC_OSAMutexCreate(&host->lock);
+    SDMMC_OSAMutexLock(&host->lock, osaWaitForever_c);
+
     /* Initialize SDIF. */
-    sdifHost->config.endianMode            = (uint32_t)kSDMMCHOST_EndianModeLittle;
     sdifHost->config.responseTimeout       = 0xFFU;
     sdifHost->config.cardDetDebounce_Clock = 0xFFFFFFU;
     sdifHost->config.dataTimeout           = 0xFFFFFFU;
@@ -423,16 +400,29 @@ status_t SDMMCHOST_Init(sdmmchost_t *host)
     /* Create transfer event. */
     if (kStatus_Success != SDMMC_OSAEventCreate(&(host->hostEvent)))
     {
-        return kStatus_Fail;
+        error = kStatus_Fail;
     }
 
-    return kStatus_Success;
+    SDMMC_OSAMutexUnlock(&host->lock);
+
+    return error;
 }
 
 void SDMMCHOST_Reset(sdmmchost_t *host)
 {
+    SDMMC_OSAMutexLock(&host->lock, osaWaitForever_c);
+
+    /* disable all the interrupt */
+    SDIF_DisableInterrupt(host->hostController.base, kSDIF_AllInterruptStatus);
+
     /* make sure host controller release all the bus line. */
     (void)SDIF_Reset(host->hostController.base, kSDIF_ResetAll, SDMMCHOST_RESET_TIMEOUT_VALUE);
+
+    /* clear all interrupt/DMA status */
+    SDIF_ClearInterruptStatus(host->hostController.base, kSDIF_AllInterruptStatus);
+    SDIF_ClearInternalDMAStatus(host->hostController.base, kSDIF_DMAAllStatus);
+
+    SDMMC_OSAMutexUnlock(&host->lock);
 }
 
 void SDMMCHOST_SetCardBusWidth(sdmmchost_t *host, uint32_t dataBusWidth)
@@ -459,22 +449,9 @@ void SDMMCHOST_SetCardBusWidth(sdmmchost_t *host, uint32_t dataBusWidth)
 
 void SDMMCHOST_Deinit(sdmmchost_t *host)
 {
+    SDMMC_OSAMutexLock(&host->lock, osaWaitForever_c);
     sdif_host_t *sdifHost = &host->hostController;
     SDIF_Deinit(sdifHost->base);
     (void)SDMMC_OSAEventDestroy(&(host->hostEvent));
-}
-
-status_t SDMMCHOST_StartBoot(sdmmchost_t *host,
-                             sdmmchost_boot_config_t *hostConfig,
-                             sdmmchost_cmd_t *cmd,
-                             uint8_t *buffer)
-{
-    /* not support */
-    return kStatus_Success;
-}
-
-status_t SDMMCHOST_ReadBootData(sdmmchost_t *host, sdmmchost_boot_config_t *hostConfig, uint8_t *buffer)
-{
-    /* not support */
-    return kStatus_Success;
+    SDMMC_OSAMutexDestroy(&host->lock);
 }

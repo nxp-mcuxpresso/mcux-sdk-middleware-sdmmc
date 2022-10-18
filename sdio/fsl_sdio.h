@@ -11,7 +11,8 @@
 #include "fsl_sdmmc_common.h"
 
 /*!
- * @addtogroup SDIOCARD
+ * @addtogroup sdiocard SDIO Card Driver
+ * @ingroup card
  * @{
  */
 
@@ -19,7 +20,7 @@
  * Definitions
  ******************************************************************************/
 /*! @brief Middleware version. */
-#define FSL_SDIO_DRIVER_VERSION (MAKE_VERSION(2U, 3U, 2U)) /*2.3.2*/
+#define FSL_SDIO_DRIVER_VERSION (MAKE_VERSION(2U, 3U, 3U)) /*2.3.3*/
 
 /*!@brief sdio device support maximum IO number */
 #ifndef FSL_SDIO_MAX_IO_NUMS
@@ -167,43 +168,9 @@ void SDIO_HostDeinit(sdio_card_t *card);
  *
  * This function reset the specific host.
  *
- * @deprecated Do not use this function. It has been superceded by @ref SDIO_HostDoReset.
- *
- * @param host host descriptor.
- */
-void SDIO_HostReset(SDMMCHOST_CONFIG *host);
-
-/*!
- * @brief reset the host.
- *
- * This function reset the specific host.
- *
  * @param card Card descriptor.
  */
 void SDIO_HostDoReset(sdio_card_t *card);
-
-/*!
- * @brief power on card.
- *
- * The power on operation depend on host or the user define power on function.
- *
- * @deprecated Do not use this function.  It has been superceded by @ref SDIO_SetCardPower.
- *
- * @param base host base address.
- * @param pwr user define power control configuration
- */
-void SDIO_PowerOnCard(SDMMCHOST_TYPE *base, const sdmmchost_pwr_card_t *pwr);
-
-/*!
- * @brief power on card.
- *
- * The power off operation depend on host or the user define power on function.
- * @deprecated Do not use this function.  It has been superceded by @ref SDIO_SetCardPower.
- *
- * @param base host base address.
- * @param pwr user define power control configuration
- */
-void SDIO_PowerOffCard(SDMMCHOST_TYPE *base, const sdmmchost_pwr_card_t *pwr);
 
 /*!
  * @brief set card power.
@@ -286,18 +253,6 @@ status_t SDIO_SwitchToHighSpeed(sdio_card_t *card);
  * @retval kStatus_Success
  */
 status_t SDIO_ReadCIS(sdio_card_t *card, sdio_func_num_t func, const uint32_t *tupleList, uint32_t tupleNum);
-
-/*!
- * @brief sdio wait card detect function.
- *
- * Detect card through GPIO, CD, DATA3.
- *
- * @deprecated Do not use this function.  It has been superceded by @ref SDIO_PollingCardInsert.
- * @param hostBase card descriptor.
- * @param cd detect configuration
- * @param waitCardStatus wait card detect status
- */
-status_t SDIO_WaitCardDetectStatus(SDMMCHOST_TYPE *hostBase, const sdmmchost_detect_card_t *cd, bool waitCardStatus);
 
 /*!
  * @brief sdio wait card detect function.

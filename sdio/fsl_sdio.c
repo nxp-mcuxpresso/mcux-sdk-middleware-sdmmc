@@ -640,7 +640,10 @@ status_t SDIO_IO_Transfer(sdio_card_t *card,
          * align, you should
          * redefine the SDMMC_GLOBAL_BUFFER_SIZE macro to a value which is big enough for your application.
          */
-        if ((((uint32_t)dataAddr & (SDMMCHOST_DMA_DESCRIPTOR_BUFFER_ALIGN_SIZE - 1U)) != 0U) &&
+        if (
+#if SDMMCHOST_DMA_DESCRIPTOR_BUFFER_ALIGN_SIZE != 1U
+            (((uint32_t)dataAddr & (SDMMCHOST_DMA_DESCRIPTOR_BUFFER_ALIGN_SIZE - 1U)) != 0U) &&
+#endif
             (actualSize <= FSL_SDMMC_DEFAULT_BLOCK_SIZE) && (!card->noInternalAlign))
         {
             dataAddr = (uint32_t *)(uint32_t)alignBuffer;
@@ -668,7 +671,9 @@ status_t SDIO_IO_Transfer(sdio_card_t *card,
         if (kStatus_Success == SDMMCHOST_TransferFunction(card->host, &content))
         {
             if ((rxData != NULL) && (dataSize != 0U) &&
+#if SDMMCHOST_DMA_DESCRIPTOR_BUFFER_ALIGN_SIZE != 1U
                 (((uint32_t)rxData & (SDMMCHOST_DMA_DESCRIPTOR_BUFFER_ALIGN_SIZE - 1U)) != 0U) &&
+#endif
                 (actualSize <= FSL_SDMMC_DEFAULT_BLOCK_SIZE) && (!card->noInternalAlign))
             {
                 (void)memcpy(rxData, alignBuffer, dataSize);
@@ -896,11 +901,14 @@ status_t SDIO_SetDataBusWidth(sdio_card_t *card, sdio_bus_width_t busWidth)
         return kStatus_SDMMC_TransferFailed;
     }
 
+#if SDMMCHOST_SUPPORT_8_BIT_WIDTH
     if (busWidth == kSDIO_DataBus8Bit)
     {
         SDMMCHOST_SetCardBusWidth(card->host, kSDMMC_BusWdith8Bit);
     }
-    else if (busWidth == kSDIO_DataBus4Bit)
+    else
+#endif
+        if (busWidth == kSDIO_DataBus4Bit)
     {
         SDMMCHOST_SetCardBusWidth(card->host, kSDMMC_BusWdith4Bit);
     }
@@ -1608,19 +1616,9 @@ void SDIO_HostDeinit(sdio_card_t *card)
     card->isHostReady = false;
 }
 
-void SDIO_HostReset(SDMMCHOST_CONFIG *host)
-{
-    SDMMCHOST_Reset(host);
-}
-
 void SDIO_HostDoReset(sdio_card_t *card)
 {
     SDMMCHOST_Reset(card->host);
-}
-
-status_t SDIO_WaitCardDetectStatus(SDMMCHOST_TYPE *hostBase, const sdmmchost_detect_card_t *cd, bool waitCardStatus)
-{
-    return SDMMCHOST_WaitCardDetectStatus(hostBase, cd, waitCardStatus);
 }
 
 status_t SDIO_PollingCardInsert(sdio_card_t *card, uint32_t status)
@@ -1697,16 +1695,6 @@ bool SDIO_IsCardPresent(sdio_card_t *card)
     return true;
 }
 
-void SDIO_PowerOnCard(SDMMCHOST_TYPE *base, const sdmmchost_pwr_card_t *pwr)
-{
-    SDMMCHOST_PowerOnCard(base, pwr);
-}
-
-void SDIO_PowerOffCard(SDMMCHOST_TYPE *base, const sdmmchost_pwr_card_t *pwr)
-{
-    SDMMCHOST_PowerOffCard(base, pwr);
-}
-
 void SDIO_SetCardPower(sdio_card_t *card, bool enable)
 {
     assert(card != NULL);
@@ -1738,7 +1726,7 @@ status_t SDIO_Init(sdio_card_t *card)
     else
     {
         /* reset the host */
-        SDIO_HostReset(card->host);
+        SDIO_HostDoReset(card);
     }
 
     /* card detect */

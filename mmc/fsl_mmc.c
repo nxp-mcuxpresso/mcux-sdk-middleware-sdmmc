@@ -19,7 +19,7 @@
 #define MMC_CMD1_RETRY_TIMES (10000U)
 #endif
 #ifndef MMC_CMD13_RETRY_TIMES
-#define MMC_CMD13_RETRY_TIMES (1000000U)
+#define MMC_CMD13_RETRY_TIMES (10000U)
 #endif
 #ifndef MMC_CARD_ACCESS_WAIT_IDLE_TIMEOUT
 #define MMC_CARD_ACCESS_WAIT_IDLE_TIMEOUT (10000U)
@@ -595,8 +595,6 @@ static status_t MMC_WaitWriteComplete(mmc_card_t *card)
         retry--;
 
     } while (retry != 0U);
-
-    SDMMC_LOG("\r\nError: CMD13 retry timeout.");
 
     return kStatus_SDMMC_WaitWriteCompleteFailed;
 }
@@ -2508,7 +2506,7 @@ status_t MMC_EnableCacheControl(mmc_card_t *card, bool enable)
     /* check the target driver strength support or not */
     if (card->extendedCsd.cacheSize == 0U)
     {
-        SDMMC_LOG("The cache is not supported by the mmc device\r\n");
+        SDMMC_LOG("The cache is not supported by the mmc device\r\n")
         return kStatus_SDMMC_NotSupportYet;
     }
 
@@ -2524,7 +2522,7 @@ status_t MMC_EnableCacheControl(mmc_card_t *card, bool enable)
     extendedCsdconfig.commandSet = kMMC_CommandSetStandard;
     if (kStatus_Success != MMC_SetExtendedCsdConfig(card, &extendedCsdconfig, false))
     {
-        SDMMC_LOG("cache enabled failed\r\n");
+        SDMMC_LOG("cache enabled failed\r\n")
         return kStatus_SDMMC_ConfigureExtendedCsdFailed;
     }
 
@@ -2542,7 +2540,7 @@ status_t MMC_FlushCache(mmc_card_t *card)
     /* check the target driver strength support or not */
     if ((card->extendedCsd.cacheSize == 0U) || (card->extendedCsd.cacheCtrl != MMC_CACHE_CONTROL_ENABLE))
     {
-        SDMMC_LOG("The cache is not supported or not enabled, please check\r\n");
+        SDMMC_LOG("The cache is not supported or not enabled, please check\r\n")
         return kStatus_SDMMC_NotSupportYet;
     }
 
@@ -2553,7 +2551,7 @@ status_t MMC_FlushCache(mmc_card_t *card)
     extendedCsdconfig.commandSet = kMMC_CommandSetStandard;
     if (kStatus_Success != MMC_SetExtendedCsdConfig(card, &extendedCsdconfig, false))
     {
-        SDMMC_LOG("cache flush failed\r\n");
+        SDMMC_LOG("cache flush failed\r\n")
         return kStatus_SDMMC_ConfigureExtendedCsdFailed;
     }
 

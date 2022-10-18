@@ -12,7 +12,8 @@
 #include <stdint.h>
 
 /*!
- * @addtogroup SDMMC_COMMON
+ * @addtogroup sdmmc_common SDMMC Common
+ * @ingroup card
  * @{
  */
 

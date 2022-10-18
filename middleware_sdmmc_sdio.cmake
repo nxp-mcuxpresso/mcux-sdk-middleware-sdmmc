@@ -6,13 +6,13 @@ target_sources(${MCUX_SDK_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/sdio/fsl_sdio.c
 )
 
-target_include_directories(${MCUX_SDK_PROJECT_NAME} PRIVATE
+target_include_directories(${MCUX_SDK_PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/sdio
 )
 
 #OR Logic component
-if(${MCUX_DEVICE} STREQUAL "MIMXRT1052")
-    include(middleware_sdmmc_host_usdhc)
+if(${MCUX_DEVICE} STREQUAL "88MW320")
+    include(middleware_sdmmc_host_sdioc)
 endif()
 if(${MCUX_DEVICE} STREQUAL "LPC54628")
     include(middleware_sdmmc_host_sdif)
@@ -22,6 +22,9 @@ if(${MCUX_DEVICE} STREQUAL "LPC54S018")
 endif()
 if(${MCUX_DEVICE} STREQUAL "LPC54S018M")
     include(middleware_sdmmc_host_sdif)
+endif()
+if(${MCUX_DEVICE} STREQUAL "MIMXRT1052")
+    include(middleware_sdmmc_host_usdhc)
 endif()
 if(${MCUX_DEVICE} STREQUAL "MIMXRT685S_cm33")
     include(middleware_sdmmc_host_usdhc)

@@ -11,7 +11,8 @@
 
 #include "fsl_sdmmc_common.h"
 /*!
- * @addtogroup SDCARD
+ * @addtogroup sdcard SD Card Driver
+ * @ingroup card
  * @{
  */
 
@@ -87,19 +88,19 @@ extern "C" {
  * instead of use the low level function, such as SD_CardInit, SD_HostInit, SD_CardDetect.
  *
  * @param card Card descriptor.
- * @retval kStatus_SDMMC_HostNotReady host is not ready.
- * @retval kStatus_SDMMC_GoIdleFailed Go idle failed.
- * @retval kStatus_SDMMC_NotSupportYet Card not support.
- * @retval kStatus_SDMMC_SendOperationConditionFailed Send operation condition failed.
- * @retval kStatus_SDMMC_AllSendCidFailed Send CID failed.
- * @retval kStatus_SDMMC_SendRelativeAddressFailed Send relative address failed.
- * @retval kStatus_SDMMC_SendCsdFailed Send CSD failed.
- * @retval kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
- * @retval kStatus_SDMMC_SendScrFailed Send SCR failed.
- * @retval kStatus_SDMMC_SetBusWidthFailed Set bus width failed.
- * @retval kStatus_SDMMC_SwitchHighSpeedFailed Switch high speed failed.
- * @retval kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_HostNotReady host is not ready.
+ * @retval #kStatus_SDMMC_GoIdleFailed Go idle failed.
+ * @retval #kStatus_SDMMC_NotSupportYet Card not support.
+ * @retval #kStatus_SDMMC_HandShakeOperationConditionFailed Send operation condition failed.
+ * @retval #kStatus_SDMMC_AllSendCidFailed Send CID failed.
+ * @retval #kStatus_SDMMC_SendRelativeAddressFailed Send relative address failed.
+ * @retval #kStatus_SDMMC_SendCsdFailed Send CSD failed.
+ * @retval #kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
+ * @retval #kStatus_SDMMC_SendScrFailed Send SCR failed.
+ * @retval #kStatus_SDMMC_SetDataBusWidthFailed Set bus width failed.
+ * @retval #kStatus_SDMMC_SwitchBusTimingFailed Switch high speed failed.
+ * @retval #kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t SD_Init(sd_card_t *card);
 
@@ -119,19 +120,19 @@ void SD_Deinit(sd_card_t *card);
  * otherwise it will return kStatus_SDMMC_HostNotReady.
  *
  * @param card Card descriptor.
- * @retval kStatus_SDMMC_HostNotReady host is not ready.
- * @retval kStatus_SDMMC_GoIdleFailed Go idle failed.
- * @retval kStatus_SDMMC_NotSupportYet Card not support.
- * @retval kStatus_SDMMC_SendOperationConditionFailed Send operation condition failed.
- * @retval kStatus_SDMMC_AllSendCidFailed Send CID failed.
- * @retval kStatus_SDMMC_SendRelativeAddressFailed Send relative address failed.
- * @retval kStatus_SDMMC_SendCsdFailed Send CSD failed.
- * @retval kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
- * @retval kStatus_SDMMC_SendScrFailed Send SCR failed.
- * @retval kStatus_SDMMC_SetBusWidthFailed Set bus width failed.
- * @retval kStatus_SDMMC_SwitchHighSpeedFailed Switch high speed failed.
- * @retval kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_HostNotReady host is not ready.
+ * @retval #kStatus_SDMMC_GoIdleFailed Go idle failed.
+ * @retval #kStatus_SDMMC_NotSupportYet Card not support.
+ * @retval #kStatus_SDMMC_HandShakeOperationConditionFailed Send operation condition failed.
+ * @retval #kStatus_SDMMC_AllSendCidFailed Send CID failed.
+ * @retval #kStatus_SDMMC_SendRelativeAddressFailed Send relative address failed.
+ * @retval #kStatus_SDMMC_SendCsdFailed Send CSD failed.
+ * @retval #kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
+ * @retval #kStatus_SDMMC_SendScrFailed Send SCR failed.
+ * @retval #kStatus_SDMMC_SetDataBusWidthFailed Set bus width failed.
+ * @retval #kStatus_SDMMC_SwitchBusTimingFailed Switch high speed failed.
+ * @retval #kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t SD_CardInit(sd_card_t *card);
 
@@ -251,8 +252,8 @@ bool SD_CheckReadOnly(sd_card_t *card);
  *
  * @param card Card descriptor.
  * @param isSelected True to set the card into transfer state, false to disselect.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t SD_SelectCard(sd_card_t *card, bool isSelected);
 
@@ -260,9 +261,9 @@ status_t SD_SelectCard(sd_card_t *card, bool isSelected);
  * @brief Send ACMD13 to get the card current status.
  *
  * @param card Card descriptor.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_SDMMC_SendApplicationCommandFailed send application command failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_SDMMC_SendApplicationCommandFailed send application command failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t SD_ReadStatus(sd_card_t *card);
 
@@ -276,13 +277,13 @@ status_t SD_ReadStatus(sd_card_t *card);
  * @param buffer The buffer to save the data read from card.
  * @param startBlock The start block index.
  * @param blockCount The number of blocks to read.
- * @retval kStatus_InvalidArgument Invalid argument.
- * @retval kStatus_SDMMC_CardNotSupport Card not support.
- * @retval kStatus_SDMMC_NotSupportYet Not support now.
- * @retval kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_InvalidArgument Invalid argument.
+ * @retval #kStatus_SDMMC_CardNotSupport Card not support.
+ * @retval #kStatus_SDMMC_NotSupportYet Not support now.
+ * @retval #kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t SD_ReadBlocks(sd_card_t *card, uint8_t *buffer, uint32_t startBlock, uint32_t blockCount);
 
@@ -295,13 +296,13 @@ status_t SD_ReadBlocks(sd_card_t *card, uint8_t *buffer, uint32_t startBlock, ui
  * @param buffer The buffer holding the data to be written to the card.
  * @param startBlock The start block index.
  * @param blockCount The number of blocks to write.
- * @retval kStatus_InvalidArgument Invalid argument.
- * @retval kStatus_SDMMC_NotSupportYet Not support now.
- * @retval kStatus_SDMMC_CardNotSupport Card not support.
- * @retval kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_InvalidArgument Invalid argument.
+ * @retval #kStatus_SDMMC_NotSupportYet Not support now.
+ * @retval #kStatus_SDMMC_CardNotSupport Card not support.
+ * @retval #kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t SD_WriteBlocks(sd_card_t *card, const uint8_t *buffer, uint32_t startBlock, uint32_t blockCount);
 
@@ -313,11 +314,11 @@ status_t SD_WriteBlocks(sd_card_t *card, const uint8_t *buffer, uint32_t startBl
  * @param card Card descriptor.
  * @param startBlock The start block index.
  * @param blockCount The number of blocks to erase.
- * @retval kStatus_InvalidArgument Invalid argument.
- * @retval kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_InvalidArgument Invalid argument.
+ * @retval #kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t SD_EraseBlocks(sd_card_t *card, uint32_t startBlock, uint32_t blockCount);
 

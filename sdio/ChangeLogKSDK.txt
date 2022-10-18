@@ -2,7 +2,13 @@
 @page middleware_log Middleware Change Log
 
 @section sdio SDIO Card driver for MCUXpresso SDK
-The current driver version is 2.3.2.
+The current driver version is 2.3.3.
+
+  - 2.3.3
+    - Bug Fixes
+      - Fixed logical dead code coverity issue.
+    - Improvements
+      - Removed deprecated api in sdio driver.
 
   - 2.3.2
     - Improvements

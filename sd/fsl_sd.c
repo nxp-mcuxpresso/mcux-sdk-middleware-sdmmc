@@ -630,7 +630,7 @@ static status_t SD_SendWriteSuccessBlocks(sd_card_t *card, uint32_t *blocks)
     sdmmchost_cmd_t command      = {0};
     sdmmchost_data_t data        = {0};
     status_t error               = kStatus_Success;
-    uint32_t *rawBuffer          = (uint32_t *)FSL_SDMMC_CARD_INTERNAL_BUFFER_ALIGN_ADDR(card->internalBuffer);
+    uint32_t *rawBuffer          = (uint32_t *)card->internalBuffer;
 
     (void)memset(rawBuffer, 0, 4U);
 
@@ -794,7 +794,7 @@ static status_t SD_SendScr(sd_card_t *card)
     sdmmchost_transfer_t content = {0};
     sdmmchost_cmd_t command      = {0};
     sdmmchost_data_t data        = {0};
-    uint32_t *rawScr             = (uint32_t *)FSL_SDMMC_CARD_INTERNAL_BUFFER_ALIGN_ADDR(card->internalBuffer);
+    uint32_t *rawScr             = (uint32_t *)card->internalBuffer;
     status_t error               = kStatus_Success;
 
     /* memset the global buffer */
@@ -856,7 +856,7 @@ static status_t SD_SelectFunction(sd_card_t *card, uint32_t group, uint32_t func
 {
     assert(card != NULL);
 
-    uint32_t *functionStatus       = (uint32_t *)FSL_SDMMC_CARD_INTERNAL_BUFFER_ALIGN_ADDR(card->internalBuffer);
+    uint32_t *functionStatus       = (uint32_t *)card->internalBuffer;
     uint16_t functionGroupInfo[6U] = {0};
     uint32_t currentFunctionStatus = 0U;
     status_t error                 = kStatus_Success;
@@ -1444,7 +1444,7 @@ status_t SD_ReadStatus(sd_card_t *card)
     sdmmchost_cmd_t command      = {0};
     sdmmchost_data_t data        = {0};
     status_t error               = kStatus_Success;
-    uint32_t *rawPointer         = (uint32_t *)FSL_SDMMC_CARD_INTERNAL_BUFFER_ALIGN_ADDR(card->internalBuffer);
+    uint32_t *rawPointer         = (uint32_t *)card->internalBuffer;
 
     (void)memset(rawPointer, 0, 64U);
 

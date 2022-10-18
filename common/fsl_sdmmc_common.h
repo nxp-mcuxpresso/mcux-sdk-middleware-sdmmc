@@ -15,7 +15,8 @@
 #include "stdlib.h"
 
 /*!
- * @addtogroup SDMMC_COMMON
+ * @addtogroup sdmmc_common SDMMC Common
+ * @ingroup card
  * @{
  */
 
@@ -35,11 +36,15 @@
 #define FSL_SDMMC_DEFAULT_BLOCK_SIZE (512U)
 
 /*! @brief make sure the internal buffer address is cache align */
+#if defined(FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL) && FSL_SDK_ENABLE_DRIVER_CACHE_CONTROL
 #if defined(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)
 #if defined(FSL_FEATURE_L2DCACHE_LINESIZE_BYTE)
 #define SDMMC_DATA_BUFFER_ALIGN_CACHE MAX(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE, FSL_FEATURE_L2DCACHE_LINESIZE_BYTE)
 #else
 #define SDMMC_DATA_BUFFER_ALIGN_CACHE FSL_FEATURE_L1DCACHE_LINESIZE_BYTE
+#endif
+#else
+#define SDMMC_DATA_BUFFER_ALIGN_CACHE sizeof(uint32_t)
 #endif
 #else
 #define SDMMC_DATA_BUFFER_ALIGN_CACHE sizeof(uint32_t)

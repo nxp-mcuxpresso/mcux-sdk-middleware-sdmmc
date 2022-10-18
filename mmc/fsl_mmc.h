@@ -12,7 +12,8 @@
 #include "fsl_sdmmc_common.h"
 
 /*!
- * @addtogroup MMCCARD
+ * @addtogroup mmccard MMC Card Driver
+ * @ingroup card
  * @{
  */
 
@@ -104,19 +105,20 @@ extern "C" {
  *
  * @param card Card descriptor.
  *
- * @retval kStatus_SDMMC_HostNotReady host is not ready.
- * @retval kStatus_SDMMC_GoIdleFailed Go idle failed.
- * @retval kStatus_SDMMC_SendOperationConditionFailed Send operation condition failed.
- * @retval kStatus_SDMMC_AllSendCidFailed Send CID failed.
- * @retval kStatus_SDMMC_SetRelativeAddressFailed Set relative address failed.
- * @retval kStatus_SDMMC_SendCsdFailed Send CSD failed.
- * @retval kStatus_SDMMC_CardNotSupport Card not support.
- * @retval kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
- * @retval kStatus_SDMMC_SendExtendedCsdFailed Send EXT_CSD failed.
- * @retval kStatus_SDMMC_SetBusWidthFailed Set bus width failed.
- * @retval kStatus_SDMMC_SwitchHighSpeedFailed Switch high speed failed.
- * @retval kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_HostNotReady host is not ready.
+ * @retval #kStatus_SDMMC_GoIdleFailed Go idle failed.
+ * @retval #kStatus_SDMMC_HandShakeOperationConditionFailed Send operation condition failed.
+ * @retval #kStatus_SDMMC_AllSendCidFailed Send CID failed.
+ * @retval #kStatus_SDMMC_SetRelativeAddressFailed Set relative address failed.
+ * @retval #kStatus_SDMMC_SendCsdFailed Send CSD failed.
+ * @retval #kStatus_SDMMC_CardNotSupport Card not support.
+ * @retval #kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
+ * @retval #kStatus_SDMMC_SendExtendedCsdFailed Send EXT_CSD failed.
+ * @retval #kStatus_SDMMC_SetDataBusWidthFailed Set bus width failed.
+ * @retval #kStatus_SDMMC_SwitchBusTimingFailed Switch high speed failed.
+ * @retval #kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
+ * @retval #kStatus_SDMMC_SetPowerClassFail set card power class failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_Init(mmc_card_t *card);
 
@@ -132,19 +134,20 @@ void MMC_Deinit(mmc_card_t *card);
  *
  * @param card Card descriptor.
  *
- * @retval kStatus_SDMMC_HostNotReady host is not ready.
- * @retval kStatus_SDMMC_GoIdleFailed Go idle failed.
- * @retval kStatus_SDMMC_SendOperationConditionFailed Send operation condition failed.
- * @retval kStatus_SDMMC_AllSendCidFailed Send CID failed.
- * @retval kStatus_SDMMC_SetRelativeAddressFailed Set relative address failed.
- * @retval kStatus_SDMMC_SendCsdFailed Send CSD failed.
- * @retval kStatus_SDMMC_CardNotSupport Card not support.
- * @retval kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
- * @retval kStatus_SDMMC_SendExtendedCsdFailed Send EXT_CSD failed.
- * @retval kStatus_SDMMC_SetBusWidthFailed Set bus width failed.
- * @retval kStatus_SDMMC_SwitchHighSpeedFailed Switch high speed failed.
- * @retval kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_HostNotReady host is not ready.
+ * @retval #kStatus_SDMMC_GoIdleFailed Go idle failed.
+ * @retval #kStatus_SDMMC_HandShakeOperationConditionFailed Send operation condition failed.
+ * @retval #kStatus_SDMMC_AllSendCidFailed Send CID failed.
+ * @retval #kStatus_SDMMC_SetRelativeAddressFailed Set relative address failed.
+ * @retval #kStatus_SDMMC_SendCsdFailed Send CSD failed.
+ * @retval #kStatus_SDMMC_CardNotSupport Card not support.
+ * @retval #kStatus_SDMMC_SelectCardFailed Send SELECT_CARD command failed.
+ * @retval #kStatus_SDMMC_SendExtendedCsdFailed Send EXT_CSD failed.
+ * @retval #kStatus_SDMMC_SetDataBusWidthFailed Set bus width failed.
+ * @retval #kStatus_SDMMC_SwitchBusTimingFailed Switch high speed failed.
+ * @retval #kStatus_SDMMC_SetCardBlockSizeFailed Set card block size failed.
+ * @retval #kStatus_SDMMC_SetPowerClassFail set card power class failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_CardInit(mmc_card_t *card);
 
@@ -226,12 +229,12 @@ bool MMC_CheckReadOnly(mmc_card_t *card);
  * @param buffer The buffer to save data.
  * @param startBlock The start block index.
  * @param blockCount The number of blocks to read.
- * @retval kStatus_InvalidArgument Invalid argument.
- * @retval kStatus_SDMMC_CardNotSupport Card not support.
- * @retval kStatus_SDMMC_SetBlockCountFailed Set block count failed.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_InvalidArgument Invalid argument.
+ * @retval #kStatus_SDMMC_CardNotSupport Card not support.
+ * @retval #kStatus_SDMMC_SetBlockCountFailed Set block count failed.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_ReadBlocks(mmc_card_t *card, uint8_t *buffer, uint32_t startBlock, uint32_t blockCount);
 
@@ -242,13 +245,13 @@ status_t MMC_ReadBlocks(mmc_card_t *card, uint8_t *buffer, uint32_t startBlock, 
  * @param buffer The buffer to save data blocks.
  * @param startBlock Start block number to write.
  * @param blockCount Block count.
- * @retval kStatus_InvalidArgument Invalid argument.
- * @retval kStatus_SDMMC_NotSupportYet Not support now.
- * @retval kStatus_SDMMC_SetBlockCountFailed Set block count failed.
- * @retval kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_InvalidArgument Invalid argument.
+ * @retval #kStatus_SDMMC_NotSupportYet Not support now.
+ * @retval #kStatus_SDMMC_SetBlockCountFailed Set block count failed.
+ * @retval #kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_SDMMC_StopTransmissionFailed Stop transmission failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_WriteBlocks(mmc_card_t *card, const uint8_t *buffer, uint32_t startBlock, uint32_t blockCount);
 
@@ -260,10 +263,10 @@ status_t MMC_WriteBlocks(mmc_card_t *card, const uint8_t *buffer, uint32_t start
  * @param  card Card descriptor.
  * @param  startGroup Start group number.
  * @param  endGroup End group number.
- * @retval kStatus_InvalidArgument Invalid argument.
- * @retval kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
- * @retval kStatus_SDMMC_TransferFailed Transfer failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_InvalidArgument Invalid argument.
+ * @retval #kStatus_SDMMC_WaitWriteCompleteFailed Send status failed.
+ * @retval #kStatus_SDMMC_TransferFailed Transfer failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_EraseGroups(mmc_card_t *card, uint32_t startGroup, uint32_t endGroup);
 
@@ -272,8 +275,8 @@ status_t MMC_EraseGroups(mmc_card_t *card, uint32_t startGroup, uint32_t endGrou
  *
  * @param card Card descriptor.
  * @param partitionNumber The partition number.
- * @retval kStatus_SDMMC_ConfigureExtendedCsdFailed Configure EXT_CSD failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_ConfigureExtendedCsdFailed Configure EXT_CSD failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_SelectPartition(mmc_card_t *card, mmc_access_partition_t partitionNumber);
 
@@ -282,10 +285,10 @@ status_t MMC_SelectPartition(mmc_card_t *card, mmc_access_partition_t partitionN
  *
  * @param card Card descriptor.
  * @param config Boot configuration structure.
- * @retval kStatus_SDMMC_NotSupportYet Not support now.
- * @retval kStatus_SDMMC_ConfigureExtendedCsdFailed Configure EXT_CSD failed.
- * @retval kStatus_SDMMC_ConfigureBootFailed Configure boot failed.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_SDMMC_NotSupportYet Not support now.
+ * @retval #kStatus_SDMMC_ConfigureExtendedCsdFailed Configure EXT_CSD failed.
+ * @retval #kStatus_SDMMC_ConfigureBootFailed Configure boot failed.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_SetBootConfig(mmc_card_t *card, const mmc_boot_config_t *config);
 
@@ -296,10 +299,10 @@ status_t MMC_SetBootConfig(mmc_card_t *card, const mmc_boot_config_t *config);
  * @param mmcConfig mmc Boot configuration structure.
  * @param buffer address to recieve data.
  * @param hostConfig host boot configurations.
- * @retval kStatus_Fail fail.
- * @retval kStatus_SDMMC_TransferFailed transfer fail.
- * @retval kStatus_SDMMC_GoIdleFailed reset card fail.
- * @retval kStatus_Success Operate successfully.
+ * @retval #kStatus_Fail fail.
+ * @retval #kStatus_SDMMC_TransferFailed transfer fail.
+ * @retval #kStatus_SDMMC_GoIdleFailed reset card fail.
+ * @retval #kStatus_Success Operate successfully.
  */
 status_t MMC_StartBoot(mmc_card_t *card,
                        const mmc_boot_config_t *mmcConfig,

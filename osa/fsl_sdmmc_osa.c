@@ -137,6 +137,7 @@ status_t SDMMC_OSAEventGet(void *eventHandle, uint32_t eventType, uint32_t *flag
     OSA_SR_ALLOC();
     OSA_ENTER_CRITICAL();
     *flag = ((sdmmc_osa_event_t *)eventHandle)->eventFlag;
+    ((sdmmc_osa_event_t *)eventHandle)->eventFlag &= ~eventType;
     OSA_EXIT_CRITICAL();
 #else
     (void)OSA_EventGet(&(((sdmmc_osa_event_t *)eventHandle)->handle), eventType, flag);
@@ -158,7 +159,7 @@ status_t SDMMC_OSAEventClear(void *eventHandle, uint32_t eventType)
 #if defined(SDMMC_OSA_POLLING_EVENT_BY_SEMPHORE) && SDMMC_OSA_POLLING_EVENT_BY_SEMPHORE
     OSA_SR_ALLOC();
     OSA_ENTER_CRITICAL();
-    ((sdmmc_osa_event_t *)eventHandle)->eventFlag &= ~eventType;
+    ((sdmmc_osa_event_t *)eventHandle)->eventFlag = 0U;
     OSA_EXIT_CRITICAL();
 #else
     (void)OSA_EventClear(&(((sdmmc_osa_event_t *)eventHandle)->handle), eventType);

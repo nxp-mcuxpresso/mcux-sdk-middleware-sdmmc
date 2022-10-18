@@ -12,7 +12,8 @@
 #include "fsl_os_abstraction.h"
 
 /*!
- * @addtogroup SDMMC_OSA
+ * @addtogroup sdmmc_osa SDMMC OSA
+ * @ingroup card
  * @{
  */
 /*******************************************************************************

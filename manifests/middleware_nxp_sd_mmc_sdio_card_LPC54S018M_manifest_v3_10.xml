@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ksdk:manifest xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="SDK_2.x_middleware_nxp_sd_mmc_sdio_card_LPC54S018M_manifest_v3_10" name="SDMMC Stack" brief="Stack supporting SD, MMC, SDIO" format_version="3.10" api_version="2.0.0" xsi:schemaLocation="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd http://nxp.com/mcuxpresso/sdk/sdk_manifest_v3.10.xsd">
+  <!--Timestamp (UTC): 2023-01-09 15:36:45.173728-->
+  <!--This manifest is generated based on sdk repo commit: dcc319a0105d6a9ebec0bc625dd7aae64718cd3d-->
+  <externalDefinitions>
+    <definition extID="LPC54S018J2M"/>
+    <definition extID="LPC54S018J4M"/>
+    <definition extID="armgcc"/>
+    <definition extID="core0_LPC54S018J2M"/>
+    <definition extID="core0_LPC54S018J4M"/>
+    <definition extID="platform.drivers.sdif.LPC54S018M"/>
+    <definition extID="component.osa_thread.LPC54S018M"/>
+    <definition extID="component.osa_bm.LPC54S018M"/>
+    <definition extID="component.osa_free_rtos.LPC54S018M"/>
+  </externalDefinitions>
+  <ksdk id="MCUXpressoSDK2130_middleware_nxp_sd_mmc_sdio_card_LPC54S018M_manifest_v3_10" name="MCUXpressoSDK2130_middleware_nxp_sd_mmc_sdio_card_LPC54S018M_manifest_v3_10" version="2.13.0"/>
+  <components>
+    <component id="middleware.sdmmc.common.LPC54S018M" name="sdmmc_common" brief="Middleware sdmmc common" version="2.3.0" full_name="SDMMC common stack" devices="LPC54S018J2M LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="false" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <source relative_path="./common" project_relative_path="inc" type="c_include">
+        <files mask="fsl_sdmmc_spec.h"/>
+        <files mask="fsl_sdmmc_common.h"/>
+      </source>
+      <source relative_path="./common" project_relative_path="src" type="src">
+        <files mask="fsl_sdmmc_common.c"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_common_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./common" project_relative_path="inc" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.host.sdif.LPC54S018M" name="sdmmc_host_sdif" brief="Middleware sdmmc host sdif" version="2.4.1" full_name="Middleware sdmmc host sdif" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <any_of>
+          <component_dependency value="middleware.sdmmc.host.sdif.interrupt.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.host.sdif.azurertos.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.host.sdif.polling.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.host.sdif.freertos.LPC54S018M"/>
+        </any_of>
+      </dependencies>
+      <source relative_path="./host/sdif" project_relative_path="host" type="c_include">
+        <files mask="fsl_sdmmc_host.h"/>
+      </source>
+      <source relative_path="./host/sdif" project_relative_path="host" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_host_sdif_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./host/sdif" project_relative_path="host" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.host.sdif.azurertos.LPC54S018M" name="sdmmc_host_sdif_azurertos" brief="Middleware sdmmc host sdif azurertos" version="2.4.1" full_name="Middleware sdmmc host sdif azurertos" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <all>
+          <component_dependency value="middleware.sdmmc.common.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.osa.azurertos.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.sdif.template.LPC54S018M"/>
+          <component_dependency value="platform.drivers.sdif.LPC54S018M"/>
+        </all>
+      </dependencies>
+      <source relative_path="./host/sdif" project_relative_path="host" type="c_include">
+        <files mask="fsl_sdmmc_host.h"/>
+      </source>
+      <source relative_path="./host/sdif/non_blocking" project_relative_path="host" type="src">
+        <files mask="fsl_sdmmc_host.c"/>
+      </source>
+      <source relative_path="./host/sdif" project_relative_path="host" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./host/sdif" project_relative_path="host" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.host.sdif.freertos.LPC54S018M" name="sdmmc_host_sdif_freertos" brief="Middleware sdmmc host sdif freertos" version="2.4.1" full_name="Middleware sdmmc host sdif freertos" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <all>
+          <component_dependency value="middleware.sdmmc.common.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.osa.freertos.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.sdif.template.LPC54S018M"/>
+          <component_dependency value="platform.drivers.sdif.LPC54S018M"/>
+        </all>
+      </dependencies>
+      <source relative_path="./host/sdif" project_relative_path="host" type="c_include">
+        <files mask="fsl_sdmmc_host.h"/>
+      </source>
+      <source relative_path="./host/sdif/non_blocking" project_relative_path="host" type="src">
+        <files mask="fsl_sdmmc_host.c"/>
+      </source>
+      <source relative_path="./host/sdif" project_relative_path="host" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_host_sdif_freertos_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./host/sdif" project_relative_path="host" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.host.sdif.interrupt.LPC54S018M" name="sdmmc_host_sdif_interrupt" brief="Middleware sdmmc host sdif interrupt" version="2.4.1" full_name="Middleware sdmmc host sdif interrupt" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <all>
+          <component_dependency value="middleware.sdmmc.common.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.osa.bm.LPC54S018M"/>
+          <component_dependency value="platform.drivers.sdif.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.sdif.template.LPC54S018M"/>
+        </all>
+      </dependencies>
+      <source relative_path="./host/sdif" project_relative_path="host" type="c_include">
+        <files mask="fsl_sdmmc_host.h"/>
+      </source>
+      <source relative_path="./host/sdif/non_blocking" project_relative_path="host" type="src">
+        <files mask="fsl_sdmmc_host.c"/>
+      </source>
+      <source relative_path="./host/sdif" project_relative_path="host" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_host_sdif_interrupt_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./host/sdif" project_relative_path="host" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.host.sdif.polling.LPC54S018M" name="sdmmc_host_sdif_polling" brief="Middleware sdmmc host sdif polling" version="2.4.1" full_name="Middleware sdmmc host sdif polling" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <all>
+          <component_dependency value="middleware.sdmmc.common.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.osa.bm.LPC54S018M"/>
+          <component_dependency value="platform.drivers.sdif.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.sdif.template.LPC54S018M"/>
+        </all>
+      </dependencies>
+      <source relative_path="./host/sdif" project_relative_path="host" type="c_include">
+        <files mask="fsl_sdmmc_host.h"/>
+      </source>
+      <source relative_path="./host/sdif/blocking" project_relative_path="host" type="src">
+        <files mask="fsl_sdmmc_host.c"/>
+      </source>
+      <source relative_path="./host/sdif" project_relative_path="host" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_host_sdif_polling_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./host/sdif" project_relative_path="host" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.mmc.LPC54S018M" name="mmc" brief="Middleware sdmmc mmc" version="2.5.0" full_name="SDMMC mmc stack" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <all>
+          <component_dependency value="middleware.sdmmc.common.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.host.sdif.LPC54S018M"/>
+        </all>
+      </dependencies>
+      <source relative_path="./mmc" project_relative_path="src" type="src">
+        <files mask="fsl_mmc.c"/>
+      </source>
+      <source relative_path="./mmc" project_relative_path="inc" type="c_include">
+        <files mask="fsl_mmc.h"/>
+      </source>
+      <source relative_path="./mmc" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_mmc_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./mmc" project_relative_path="inc" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.osa.azurertos.LPC54S018M" name="sdmmc_osa_azurertos" brief="Middleware sdmmc osa_azurertos" version="2.3.0" full_name="SDMMC common stack" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <component_dependency value="component.osa_thread.LPC54S018M"/>
+      </dependencies>
+      <source relative_path="./osa" project_relative_path="osa" type="c_include">
+        <files mask="fsl_sdmmc_osa.h"/>
+      </source>
+      <source relative_path="./osa" project_relative_path="osa" type="src">
+        <files mask="fsl_sdmmc_osa.c"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./osa" project_relative_path="osa" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.osa.bm.LPC54S018M" name="sdmmc_osa_bm" brief="Middleware sdmmc osa_bm" version="2.3.0" full_name="SDMMC common stack" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <component_dependency value="component.osa_bm.LPC54S018M"/>
+      </dependencies>
+      <source relative_path="./osa" project_relative_path="osa" type="c_include">
+        <files mask="fsl_sdmmc_osa.h"/>
+      </source>
+      <source relative_path="./osa" project_relative_path="osa" type="src">
+        <files mask="fsl_sdmmc_osa.c"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_osa_bm_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./osa" project_relative_path="osa" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.osa.freertos.LPC54S018M" name="sdmmc_osa_freertos" brief="Middleware sdmmc osa_freertos" version="2.3.0" full_name="SDMMC common stack" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <component_dependency value="component.osa_free_rtos.LPC54S018M"/>
+      </dependencies>
+      <source relative_path="./osa" project_relative_path="osa" type="c_include">
+        <files mask="fsl_sdmmc_osa.h"/>
+      </source>
+      <source relative_path="./osa" project_relative_path="osa" type="src">
+        <files mask="fsl_sdmmc_osa.c"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_osa_freertos_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./osa" project_relative_path="osa" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.sd.LPC54S018M" name="sd" brief="Middleware sdmmc sd" version="2.4.1" full_name="SDMMC sd stack" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <all>
+          <component_dependency value="middleware.sdmmc.common.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.host.sdif.LPC54S018M"/>
+        </all>
+      </dependencies>
+      <source relative_path="./sd" project_relative_path="src" type="src">
+        <files mask="fsl_sd.c"/>
+      </source>
+      <source relative_path="./sd" project_relative_path="inc" type="c_include">
+        <files mask="fsl_sd.h"/>
+      </source>
+      <source relative_path="./sd" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_sd_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./sd" project_relative_path="inc" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.sdhc.template.LPC54S018M" name="SDMMC configuration template" brief="Template configuration file to be edited by user." version="1.0.0" full_name="SDMMC configuration template" devices="LPC54S018J2M LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="false" type="project_template" package_base_path=".././" project_base_path="sdmmc">
+      <source relative_path="./template/sdhc" project_relative_path="template/sdhc" type="src">
+        <files mask="sdmmc_config.c"/>
+      </source>
+      <source relative_path="./template/sdhc" project_relative_path="template/sdhc" type="c_include">
+        <files mask="sdmmc_config.h"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./template/sdhc" project_relative_path="template/sdhc" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.sdif.template.LPC54S018M" name="SDMMC configuration template" brief="Template configuration file to be edited by user." version="1.0.0" full_name="SDMMC configuration template" devices="LPC54S018J2M LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="false" type="project_template" package_base_path=".././" project_base_path="sdmmc">
+      <source relative_path="./template/sdif" project_relative_path="template/sdif" type="src">
+        <files mask="sdmmc_config.c"/>
+      </source>
+      <source relative_path="./template/sdif" project_relative_path="template/sdif" type="c_include">
+        <files mask="sdmmc_config.h"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./template/sdif" project_relative_path="template/sdif" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.sdio.LPC54S018M" name="sdio" brief="Middleware sdmmc sdio" version="2.4.1" full_name="SDMMC sdio stack" devices="LPC54S018J2M LPC54S018J4M" device_cores="core0_LPC54S018J2M core0_LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="true" type="middleware" package_base_path=".././" project_base_path="sdmmc">
+      <dependencies>
+        <all>
+          <component_dependency value="middleware.sdmmc.common.LPC54S018M"/>
+          <component_dependency value="middleware.sdmmc.host.sdif.LPC54S018M"/>
+        </all>
+      </dependencies>
+      <source relative_path="./sdio" project_relative_path="src" type="src">
+        <files mask="fsl_sdio.c"/>
+      </source>
+      <source relative_path="./sdio" project_relative_path="inc" type="c_include">
+        <files mask="fsl_sdio.h"/>
+      </source>
+      <source relative_path="./sdio" type="doc">
+        <files mask="ChangeLogKSDK.txt"/>
+      </source>
+      <source toolchain="armgcc" relative_path="./" project_relative_path="." type="workspace">
+        <files mask="middleware_sdmmc_sdio_LPC54S018M.cmake" hidden="true"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./sdio" project_relative_path="inc" type="c_include"/>
+      </include_paths>
+    </component>
+    <component id="middleware.sdmmc.usdhc.template.LPC54S018M" name="SDMMC configuration template" brief="Template configuration file to be edited by user." version="1.0.0" full_name="SDMMC configuration template" devices="LPC54S018J2M LPC54S018J4M" category="Memories/SDMMC Stack" user_visible="false" type="project_template" package_base_path=".././" project_base_path="sdmmc">
+      <source relative_path="./template/usdhc" project_relative_path="template/usdhc" type="src">
+        <files mask="sdmmc_config.c"/>
+      </source>
+      <source relative_path="./template/usdhc" project_relative_path="template/usdhc" type="c_include">
+        <files mask="sdmmc_config.h"/>
+      </source>
+      <include_paths>
+        <include_path relative_path="./template/usdhc" project_relative_path="template/usdhc" type="c_include"/>
+      </include_paths>
+    </component>
+  </components>
+</ksdk:manifest>

@@ -13,7 +13,7 @@
 #include "fsl_sdif.h"
 #include "fsl_sdmmc_osa.h"
 /*!
- * @addtogroup  sdmmchost_sdif SDIF HOST Adapter Driver
+ * @addtogroup sdmmchost_sdif SDIF HOST Adapter Driver
  * @ingroup sdmmchost
  * @{
  */

@@ -982,7 +982,7 @@ static void SD_DecodeCsd(sd_card_t *card, uint32_t *rawCsd)
         csd->deviceSize |= (uint32_t)((rawCsd[1U] & 0xC0000000U) >> 30U);
         csd->readCurrentVddMin    = (uint8_t)((rawCsd[1U] & 0x38000000U) >> 27U);
         csd->readCurrentVddMax    = (uint8_t)((rawCsd[1U] & 0x7000000U) >> 24U);
-        csd->writeCurrentVddMin   = (uint8_t)((rawCsd[1U] & 0xE00000U) >> 20U);
+        csd->writeCurrentVddMin   = (uint8_t)((rawCsd[1U] & 0xE00000U) >> 21U);
         csd->writeCurrentVddMax   = (uint8_t)((rawCsd[1U] & 0x1C0000U) >> 18U);
         csd->deviceSizeMultiplier = (uint8_t)((rawCsd[1U] & 0x38000U) >> 15U);
 
